@@ -1,0 +1,65 @@
+version: '3.6'
+services:
+  paypal_demo:
+    build:
+      context: '.'
+      args:
+        uid: 1000
+        app_name: ${APP_NAME}
+    container_name: ${APP_NAME}
+    environment:
+      - APACHE_RUN_USER=#1000
+      - APACHE_RUN_GROUP=#1000
+    volumes:
+      - ./:/var/www/html/${APP_NAME}
+    ports:
+      -  8080:80
+    links:
+      - mysql_db
+    depends_on:
+            - mysql_db
+    networks:
+      backend:
+        aliases:
+          - laravel-app
+  mysql_db:
+    image: mysql
+    restart: always
+    container_name: ${APP_NAME}_DB
+    volumes:
+      - ./run/var:/var/lib/mysql
+      - ./run/dump/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      -  3308:3306
+    expose:
+      - "3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      backend:
+        aliases:
+          - mysql_db
+  phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: ${APP_NAME}_PMA
+        depends_on:
+            - mysql_db
+        links:
+            - mysql_db
+        ports:
+            - 8888:80
+        environment:
+            PMA_HOST: mysql_db
+            PMA_PORT: 3306
+        networks:
+          backend:
+            aliases:
+              - phpmyadmin
+
+networks:
+  backend:
+    name: backend-network

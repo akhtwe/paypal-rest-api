@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PayPal REST API Example</title>
+    <style>
+        form.paypal{
+            text-align: center;
+            padding-top:5%;
+        }
+        div.container{
+            display: inline-block;
+            border: 1px solid gray;
+            padding:20px;
+            border-radius: 10px;
+            background-color: aliceblue;
+        }
+        div.group{
+            text-align: left;
+            padding:20px 10px;
+        }
+        div.group>.form-control{
+            width: 100%;
+        }
+        form .btn{
+            cursor: pointer;
+            padding:5px 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <form class="paypal" action="request.php" method="post" id="paypal_form">
+        <h3 style="text-align: center;">Paypal Payment</h3>
+        <div class="container">
+        <div class="group">
+            <label for="Item number">Item (sample):</label>
+            <input type="number" name="item_number" value="123456" class="form-control" placeholder="Item Number -123456" required/>
+        </div>
+        <div class="group">
+            <label for="set_amount">Amount *:</label>
+            <input type="number" name="set_amount" id="set_amount" class="form-control" placeholder="Format : 1.00" required>
+        </div>
+        <div class="group">
+            <label for="currency">Currency *:</label>
+            <select name="currency" id="currency" class="form-control" required>
+                <option value="SGD" selected>SGD</option>
+                <option value="USD">USD</option>
+            </select>
+        </div>
+        <input type="submit" name="submit" class="btn" value="Submit Payment"/>
+    </div>
+    </form>
+<script>
+    var myForm = document.getElementById('paypal_form');
+myForm.onsubmit = function() {
+    var w = window.open('about:blank','Popup_Window','toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=450,height=600,left = 580,top = 134');
+    this.target = 'Popup_Window';
+};
+</script>
+</body>
+</html>
